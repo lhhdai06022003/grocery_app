@@ -23,7 +23,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Image.network(widget.product.image),
+              Image.network(widget.product.image,width: 100,height: 100,),
               Column(
                 children: [
                   Text(

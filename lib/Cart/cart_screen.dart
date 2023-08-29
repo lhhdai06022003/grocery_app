@@ -4,8 +4,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:grocery_app/Cart/payment_screen.dart';
 import 'package:grocery_app/model/products_model.dart';
 import 'package:grocery_app/widget/cart_widget.dart';
+import 'package:provider/provider.dart';
 
 import '../constant/constant.dart';
+import '../provider/product_provider.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -17,7 +19,24 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
+    var _myCart = context.watch<ProductProvider>().myCart;
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Cart',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.165,
+            color: kPrimaryColor,
+          ),
+        ),
+        leading: BackButton(),
+        backgroundColor: Colors.white,
+        foregroundColor: kPrimaryColor,
+        elevation: 0,
+        centerTitle: true,
+      ),
       bottomNavigationBar:  InkWell(
         onTap: (){
           Navigator.push(
@@ -53,30 +72,13 @@ class _CartScreenState extends State<CartScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: EdgeInsets.only(left: 15,top: 15),
-                child: Icon(
-                  FontAwesomeIcons.chevronLeft,
-                  size: 25,
-                  color: kPrimaryColor,
-                ),
-              ),
-              Center(
-                child: Text(
-                  "Cart",
-                  style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                      color: kPrimaryColor,
-                      letterSpacing: -0.16),
-                ),
-              ),
-              listProduct.isNotEmpty
+              _myCart.isNotEmpty
                   ? ListView.builder(
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
-                      itemCount: listProduct.length,
+                      itemCount: _myCart.length,
                       itemBuilder: (context, index) {
+                        var currentCart = _myCart[index];
                         return Slidable(
                           key: const ValueKey(0),
                           endActionPane: ActionPane(
@@ -89,8 +91,15 @@ class _CartScreenState extends State<CartScreen> {
                                 autoClose: true,
                                 flex: 1,
                                 onPressed: (value) {
-                                  listProduct.removeAt(index);
-                                  setState(() {});
+                                  context
+                                      .read<ProductProvider>()
+                                      .removeFromCart(currentCart);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Delete'),
+                                      duration: Duration(seconds: 2), // Thời gian hiển thị
+                                    ),
+                                  );
                                 },
                                 backgroundColor: Colors.red,
                                 foregroundColor: Colors.white,
@@ -100,7 +109,7 @@ class _CartScreenState extends State<CartScreen> {
                             ],
                           ),
                           child: CartWidget(
-                              product: listProduct[index], onTap: () {}),
+                              product: _myCart[index], onTap: () {}),
                         );
                       },
                     )

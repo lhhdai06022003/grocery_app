@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:grocery_app/Home/home_screen.dart';
+import 'package:grocery_app/page_login/login_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:grocery_app/page_login/main_app.dart';
+import 'package:grocery_app/provider/product_provider.dart';
+import 'package:provider/provider.dart';
 
-Future main()  async{
+Future<void> main()  async{
   WidgetsFlutterBinding.ensureInitialized();
-  runApp( const MyApp());
+  await Firebase.initializeApp();
+  runApp(
+    ChangeNotifierProvider<ProductProvider>(
+      create: (_) => ProductProvider(),
+      child: const MyApp(),
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -20,7 +29,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           fontFamily: "Poppins"
       ),
-      home:  const MainApp(),
+      home:   LoginScreen(),
     );
   }
 }

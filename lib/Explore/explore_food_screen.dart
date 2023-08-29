@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:grocery_app/Home/detail_screen.dart';
 import 'package:grocery_app/constant/constant.dart';
 import 'package:grocery_app/model/category_model.dart';
 import 'package:grocery_app/model/products_model.dart';
@@ -49,38 +50,27 @@ class _ExploreFoodScreenState extends State<ExploreFoodScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          title,
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.165,
+            color: kPrimaryColor,
+          ),
+        ),
+        leading: BackButton(),
+        backgroundColor: Colors.white,
+        foregroundColor: kPrimaryColor,
+        elevation: 0,
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(15.0),
           child: Column(
             children: [
-              Padding(
-                padding: EdgeInsets.only(top: 15),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(
-                      FontAwesomeIcons.chevronLeft,
-                      size: 25,
-                      color: kPrimaryColor,
-                    ),
-                    SizedBox(
-                      width: 100,
-                    ),
-                    Text(
-                      title,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 24,
-                          color: kPrimaryColor),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
               // search
               Container(
                 height: 50,
@@ -144,9 +134,9 @@ class _ExploreFoodScreenState extends State<ExploreFoodScreen> {
                   return PopularWidget(
                       product: list[index],
                       onTap: () {
-                        // Navigator.push(context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => ExploreFoodScreen()));
+                        Navigator.push(context,
+                            MaterialPageRoute(
+                                builder: (context) => DetailScreen(product: list[index])));
                       });
                 },
               ),

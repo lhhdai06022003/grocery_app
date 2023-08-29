@@ -24,6 +24,8 @@ if (flutterVersionName == null) {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+apply plugin: 'com.google.gms.google-services'
+
 
 android {
     namespace "com.example.grocery_app"
@@ -44,6 +46,8 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -53,6 +57,9 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+}
+dependencies {
+    implementation "androidx.multidex:multidex:2.0.1"
 }
 
 flutter {

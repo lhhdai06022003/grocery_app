@@ -171,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => DetailScreen()));
+                                builder: (context) => DetailScreen(product: listProduct[index])));
                       });
                 },
               ),

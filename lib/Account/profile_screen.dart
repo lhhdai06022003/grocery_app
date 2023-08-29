@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:grocery_app/page_login/login_screen.dart';
 
 import '../constant/constant.dart';
+import '../firebase/firebase_service.dart';
 import '../widget/profile_menu_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -34,28 +36,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Profile',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.165,
+            color: kPrimaryColor,
+          ),
+        ),
+        leading: BackButton(),
+        backgroundColor: Colors.white,
+        foregroundColor: kPrimaryColor,
+        elevation: 0,
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children:  [
-              SizedBox(height: 30,),
-              Icon(
-                FontAwesomeIcons.chevronLeft,
-                size: 25,
-                color: kPrimaryColor,
-              ),
-              Center(
-                child: Text(
-                  "Profile",
-                  style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                      color: kPrimaryColor,
-                      letterSpacing: -0.16),
-                ),
-              ),
               SizedBox(height: 30,),
               ProfileMenuWidget(icon: FontAwesomeIcons.solidUser, title: 'Profile', iconRight: FontAwesomeIcons.chevronRight,),
               SizedBox(height: 35,),
@@ -157,29 +159,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               SizedBox(height: 35,),
               //logout
-              Row(
-                children:   const [
-                  Row(
-                    children: [
-                      Icon(
-                        FontAwesomeIcons.rightFromBracket,
-                        size: 20,
-                        color: kTitleColor,
+              InkWell(
+                onTap: (){
+                  FirebaseService().signOut();
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  Navigator.push(context,
+                      MaterialPageRoute(
+                          builder: (context) => LoginScreen()));
+                }
+                ,
+                child: Row(
+                  children: const [
+                    Icon(
+                      FontAwesomeIcons.rightFromBracket,
+                      size: 20,
+                      color: kTitleColor,
+                    ),
+                    SizedBox(width: 15,),
+                    Text(
+                      "Logout",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: kTitleColor,
+                          fontSize: 18,
+                          letterSpacing: 0.09
                       ),
-                      SizedBox(width: 15,),
-                      Text(
-                        "Logout",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            color: kTitleColor,
-                            fontSize: 18,
-                            letterSpacing: 0.09
-                        ),
-                      ),
-                    ],
-                  ),
-
-                ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

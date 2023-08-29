@@ -1,37 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:grocery_app/constant/constant.dart';
+import 'package:grocery_app/provider/product_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../model/products_model.dart';
 import '../widget/popular_widget.dart';
 
 class DetailScreen extends StatefulWidget {
-  const DetailScreen({super.key});
-
+  const DetailScreen({super.key, required this.product});
+  final Product product;
   @override
   State<DetailScreen> createState() => _DetailScreenState();
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  bool favorite = false;
 
-  void toggleFavorive() {
 
-    if(favorite == false)
-    {
-      setState(() {
-        favorite = true;
-      });
-    }
-    else
-    {
-      setState(() {
-        favorite = false;
-      });
-    }
-  }
   @override
   Widget build(BuildContext context) {
+   // var product = context.watch<ProductProvider>().product;
+    var myProduct = context.watch<ProductProvider>().myProduct;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -43,7 +33,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 Padding(
                   padding: EdgeInsets.only(top: 30.0, left: 15.0),
                   child: Icon(
-                    FontAwesomeIcons.chevronLeft,
+                    FontAwesomeIcons.arrowLeft,
                     size: 25,
                     color: kPrimaryColor,
                   ),
@@ -53,7 +43,7 @@ class _DetailScreenState extends State<DetailScreen> {
             ),
             Center(
               child: Image.network(
-                  "https://firebasestorage.googleapis.com/v0/b/grocery-app-bfed1.appspot.com/o/apple.png?alt=media&token=71ef92c9-565f-460b-a76c-7efe8985cf85"),
+                  widget.product.image),
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -62,7 +52,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 children: [
                   //name
                   Text(
-                    "Red Apple",
+                    widget.product.name,
                     style: TextStyle(
                         color: kTitleColor,
                         fontSize: 24,
@@ -71,9 +61,9 @@ class _DetailScreenState extends State<DetailScreen> {
                   //price
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
-                    children: const [
+                    children:  [
                       Text(
-                        "\$1.2",
+                        "\$${widget.product.price}",
                         style: TextStyle(
                             color: kTitleColor,
                             fontWeight: FontWeight.w400,
@@ -160,15 +150,38 @@ class _DetailScreenState extends State<DetailScreen> {
                       ),
                       InkWell(
                         onTap: (){
-                          setState(() {
-                            toggleFavorive();
-                          });
-                        },
-                        child: Icon(
 
-                          favorite == false ? FontAwesomeIcons.heart : FontAwesomeIcons.solidHeart,
-                          color: kPrimaryColor,
-                          size: 30,
+                        },
+                        child: IconButton(
+                           onPressed: () {
+                             if(!myProduct.contains(widget.product)){
+                               context
+                               .read<ProductProvider>()
+                                   .addToList(widget.product);
+                               ScaffoldMessenger.of(context).showSnackBar(
+                                 SnackBar(
+                                   content: Text('Liked!'),
+                                   duration: Duration(seconds: 2), // Thời gian hiển thị
+                                 ),
+                               );
+                             }else{
+                               context
+                                   .read<ProductProvider>()
+                                   .removeFromList(widget.product);
+                               ScaffoldMessenger.of(context).showSnackBar(
+                                 SnackBar(
+                                   content: Text('UnLiked!'),
+                                   duration: Duration(seconds: 2), // Thời gian hiển thị
+                                 ),
+                               );
+
+                             }
+                           },
+                          icon: Icon(
+                            myProduct.contains(widget.product) ? FontAwesomeIcons.solidHeart :  FontAwesomeIcons.heart  ,
+                            color: kPrimaryColor,
+                            size: 30,
+                          )
                         ),
                       ),
                     ],
@@ -177,6 +190,15 @@ class _DetailScreenState extends State<DetailScreen> {
                   // add to cart
                   InkWell(
                     onTap: (){
+                      context
+                          .read<ProductProvider>()
+                          .addToCart(widget.product);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Add to Cart!'),
+                          duration: Duration(seconds: 2), // Thời gian hiển thị
+                        ),
+                      );
                     },
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 10),
@@ -233,10 +255,10 @@ class _DetailScreenState extends State<DetailScreen> {
                         return PopularWidget(
                             product: listProduct[index],
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => DetailScreen()));
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => DetailScreen()));
                             });
                       },
                     ),

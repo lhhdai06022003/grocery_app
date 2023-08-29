@@ -16,28 +16,27 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Account',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.165,
+            color: kPrimaryColor,
+          ),
+        ),
+        leading: BackButton(),
+        backgroundColor: Colors.white,
+        foregroundColor: kPrimaryColor,
+        elevation: 0,
+        centerTitle: true,
+      ),
       body: Padding(
         padding: EdgeInsets.all(15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 15,),
-            Icon(
-              FontAwesomeIcons.chevronLeft,
-              size: 25,
-              color: kPrimaryColor,
-            ),
-            Center(
-              child: Text(
-                "Account",
-                style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                    color: kPrimaryColor,
-                    letterSpacing: -0.16),
-              ),
-            ),
-            SizedBox(height: 30,),
             InkWell(
               onTap: (){
                 Navigator.push(context,
